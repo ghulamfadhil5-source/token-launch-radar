@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Radar — pre-token protocols, priced by their own market</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="#2fe6a8" stroke-width="2"/><circle cx="16" cy="16" r="8" fill="none" stroke="#2fe6a8" stroke-width="1.5" opacity=".55"/><path d="M16 16 L27 7" stroke="#2fe6a8" stroke-width="2"/><circle cx="16" cy="16" r="2.5" fill="#2fe6a8"/></svg>
+    <span class="wordmark">LAUNCH&nbsp;RADAR</span>
+  </div>
+  <div class="topmeta"><span id="snap-date">Snapshot 2026-11-14</span><span class="sep">·</span><span>DefiLlama protocol index</span><span class="sep">·</span><span>model radar-2</span></div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Pre-token protocols, priced by their own market.</h1>
+    <p class="lede">Every protocol here records no token yet. The radar ranks them by an implied
+    value built from the snapshot itself: each category's multiple is the median market-cap-to-TVL
+    ratio of that category's protocols whose token already trades. The watchlist is the floor —
+    every protocol with at least $50M of TVL and no token on record — and the early radar adds the
+    strongest pre-token protocols below it. Implied value is a model, not a price, and never a
+    promise that a token comes.</p>
+  </section>
+
+  <section class="stats" id="stats">
+    <div class="stat"><span class="stat-num" id="stat-watch">40 / 40</span><span class="stat-label">Watchlist covered</span></div>
+    <div class="stat"><span class="stat-num" id="stat-rows">178</span><span class="stat-label">Board rows scored</span></div>
+    <div class="stat"><span class="stat-num" id="stat-top">—</span><span class="stat-label">Top implied value</span></div>
+    <div class="stat"><span class="stat-num" id="stat-live">24</span><span class="stat-label">Live tokens set aside</span></div>
+  </section>
+
+  <section class="controls">
+    <label class="ctl">Search
+      <input id="q" type="search" placeholder="Name, category or chain" autocomplete="off">
+    </label>
+    <label class="ctl">Category
+      <select id="category"><option value="">All categories</option></select>
+    </label>
+    <label class="ctl">Chain
+      <select id="chain"><option value="">All chains</option></select>
+    </label>
+    <label class="ctl">Sort by
+      <select id="sort">
+        <option value="rank">Rank (implied value)</option>
+        <option value="tvl">TVL, largest first</option>
+        <option value="growth">7-day growth, fastest first</option>
+        <option value="age">Age, oldest first</option>
+      </select>
+    </label>
+    <div class="ctl seg" role="group" aria-label="Token status">
+      <button id="view-pre" class="seg-btn active" type="button">Pre-token</button>
+      <button id="view-live" class="seg-btn" type="button">Live tokens</button>
+    </div>
+    <div class="count" id="count">178 rows shown</div>
+  </section>
+
+  <section class="detail" id="detail" hidden>
+    <div class="detail-head">
+      <div>
+        <div class="detail-kicker" id="d-kicker">Rank 1 of 178</div>
+        <h2 id="d-name">—</h2>
+        <div class="detail-sub" id="d-sub">—</div>
+      </div>
+      <button class="close-btn" id="d-close" type="button">Close</button>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-figs" id="d-figs"></div>
+      <div class="detail-model">
+        <h3>How this value is modelled</h3>
+        <div id="d-model"></div>
+        <p class="fine">The same function scores every protocol. The page recomputes this row
+        from the snapshot and lands on the same number board.json carries. This is an estimate,
+        not a price — and the protocol records no token, which is not the same as having none.</p>
+      </div>
+    </div>
+    <h3 class="plan-title">Farm plan</h3>
+    <ol class="plan" id="d-plan"></ol>
+  </section>
+
+  <section class="boardwrap" id="boardwrap">
+    <p class="board-note" id="board-note">Pre-token protocols, strongest implied value first. Select a row for its model and farm plan.</p>
+    <table class="board" id="board">
+      <thead><tr>
+        <th data-sort="rank">Rank</th>
+        <th>Protocol</th>
+        <th data-sort="tvl">TVL</th>
+        <th data-sort="growth">7d</th>
+        <th data-sort="age">Age</th>
+        <th data-sort="implied">Implied value</th>
+        <th>Token</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <table class="board live" id="liveboard" hidden>
+      <thead><tr>
+        <th>#</th><th>Protocol</th><th>TVL</th><th>7d</th><th>Market cap</th><th>Token</th>
+      </tr></thead>
+      <tbody id="liverows"></tbody>
+    </table>
+  </section>
+
+  <footer class="method">
+    <h3>How the radar works</h3>
+    <p><strong>Value.</strong> Implied value = TVL × category multiple × growth multiplier ×
+    maturity multiplier. The category multiple is the median market-cap-to-TVL ratio of the
+    live-token protocols in the same category in this snapshot (at least 3 of them, else the
+    global median, <span id="global-mult">—</span>), clamped to 0.05–1.50. Growth is the 7-day TVL change clamped to
+    −50…+100%, weighted 0.6. Maturity rises with the days a protocol has run with no token
+    recorded, from 0.70 to 1.00 over four years; an unknown listing date scores 0.85.</p>
+    <p><strong>Coverage.</strong> The board holds all 40 watchlist protocols and every rankable
+    pre-token protocol below the $50M floor — 178 rows in all. Rankable means it records no
+    token, is not a versioned pool, and is not a wrapped, staked, bridged or exchange product.
+    Protocols whose token already trades are set aside in the Live tokens view at their market
+    cap, never mixed into the ranking.</p>
+    <p><strong>Farm plans.</strong> Each row carries concrete steps with what they cost and how
+    long they take, built from the protocol's own category, chains, TVL and age. A plan is a
+    way to be present before a launch, not a guarantee of one.</p>
+    <p class="fine">Source: DefiLlama protocol index, fetched 2026-11-14. “Records no token”
+    means the snapshot carries no market cap, CoinGecko id or symbol for the protocol — a
+    protocol on this board may still have a token its record does not carry.</p>
+  </footer>
+</main>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
